@@ -1,0 +1,17 @@
+--remove Siri
+--remove Launchpad
+--remove Safari
+--remove Mail
+--remove Contacts
+--remove Calendar
+--remove Notes
+--remove Reminders
+--remove Maps
+--remove Photos
+--remove Facetime
+--remove iBooks
+--remove App Store
+--remove System Preferences
+--add /Applications/Slack.app
+--add /Applications/Atom.app
+--add '/Applications/Google Chrome.app'

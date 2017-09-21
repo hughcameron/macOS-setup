@@ -38,7 +38,6 @@ run() {
     echo ""
 }
 
-
 # Just a little welcome screen
 echo ""
 headline "                                                "
@@ -59,6 +58,10 @@ then
     echo ""
 fi
 
+###############################################################################
+# General UI/UX                                                               #
+###############################################################################
+
 chapter "Adjusting general settings"
 
 step "Setting your computer name (as done via System Preferences → Sharing)."
@@ -70,338 +73,124 @@ run sudo scutil --set HostName "'$computer_name'"
 run sudo scutil --set LocalHostName "'$computer_name'"
 run sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "'$computer_name'"
 
-step "Disable OS X Gate Keeper?"
-echo -n "  (You’ll be able to install any app you want from here on, not just Mac App Store apps) [Y/n]: "
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run sudo spctl --master-disable
-        run sudo defaults write /var/db/SystemPolicy-prefs.plist enabled -string no
-        ;;
-esac
+# Disable OS X Gate Keeper - you’ll be able to install any app you want from here on, not just Mac App Store apps"
+run sudo spctl --master-disable
+run sudo defaults write /var/db/SystemPolicy-prefs.plist enabled -string no
 
-step "Disable the “Are you sure you want to open this application?” dialog? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.LaunchServices LSQuarantine -bool false
-        ;;
-esac
+# Disable the sudden motion sensor as it’s not useful for SSDs
+run sudo pmset -a sms 0
 
-chapter "Adjusting HDD/SSD specific settings"
+# Increase window resize speed for Cocoa applications
+run defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 
-step "Disable the sudden motion sensor?"
-echo -n "  (It’s not useful for SSDs) [Y/n]: "
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run sudo pmset -a sms 0
-        ;;
-esac
+# Expand save panel by default
+run defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+run defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
-chapter "Adjusting input device settings"
+# Expand print panel by default
+run defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+run defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
-step "Enable tap to click for this user and for the login screen? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-        run defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-        run defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-        ;;
-esac
+# Save to disk (not to iCloud) by default
+run defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
-step "Enable full keyboard access for all controls?"
-echo -n "  (e.g. enable Tab in modal dialogs) [Y/n]: "
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-        ;;
-esac
+# Automatically quit printer app once the print jobs complete
+run defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-step "Use scroll gesture with the Ctrl (^) modifier key to zoom? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
-        run defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
-        ;;
-esac
+# Disable the “Are you sure you want to open this application?” dialog
+run defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-step "Disable press-and-hold for keys in favor of key repeat? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-        ;;
-esac
+# Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
+run /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
 
-step "Set a blazingly fast keyboard repeat rate? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write NSGlobalDomain KeyRepeat -int 1
-        run defaults write NSGlobalDomain InitialKeyRepeat -int 10
-        ;;
-esac
+# Set Help Viewer windows to non-floating mode
+run defaults write com.apple.helpviewer DevMode -bool true
 
-step "Disable auto-correct? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-        ;;
-esac
+# Enable full keyboard access for all controls? e.g. enable Tab in modal dialogs
+run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-step "Stop iTunes from responding to the keyboard media keys? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-        ;;
-esac
+# Disable press-and-hold for keys in favor of key repeat?
+run defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-chapter "Adjusting screen settings"
-
-step "Disable shadow in screenshots? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.screencapture disable-shadow -bool true
-        ;;
-esac
+# Set a blazingly fast keyboard repeat rate?
+run defaults write NSGlobalDomain KeyRepeat -int 1
+run defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
 chapter "Adjusting Finder settings"
 
-step "Set Downloads as the default location for new Finder windows? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.finder NewWindowTarget -string '"PfLo"'
-        run defaults write com.apple.finder NewWindowTargetPath -string "'file://${HOME}/Downloads/'"
-        ;;
-esac
+# Keep folders on top when sorting by name?
+run defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
-step "Show icons for hard drives, servers, and removable media on the desktop? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-        run defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-        run defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-        run defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
-        ;;
-esac
+# Disable the warning when changing a file extension?
+run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
-step "Show all filename extensions? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-        ;;
-esac
+# Use list view in all Finder windows by default?
+run defaults write com.apple.finder FXPreferredViewStyle -string '"Nlsv"'
 
-step "Keep folders on top when sorting by name? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.finder _FXSortFoldersFirst -bool true
-        ;;
-esac
+# Finder: allow quitting via ⌘ + Q; doing so will also hide desktop icons
+run defaults write com.apple.finder QuitMenuItem -bool true
 
-step "Disable the warning when changing a file extension? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-        ;;
-esac
+# Set Desktop as the default location for new Finder windows
+# For other paths, use `PfLo` and `file:///full/path/here/`
+run defaults write com.apple.finder NewWindowTarget -string "PfDe"
+run defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
 
-step "Use list view in all Finder windows by default? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.finder FXPreferredViewStyle -string '"Nlsv"'
-        ;;
-esac
+# Finder: show status bar
+run defaults write com.apple.finder ShowStatusBar -bool true
 
-step "Enable AirDrop over Ethernet and on unsupported Macs running Lion? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
-        ;;
-esac
+# Finder: show path bar
+run defaults write com.apple.finder ShowPathbar -bool true
 
-step "Show the ~/Library folder? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run chflags nohidden ~/Library
-        ;;
-esac
+# Finder: allow text selection in Quick Look
+run defaults write com.apple.finder QLEnableTextSelection -bool true
 
-step "Show the /Volumes folder? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run sudo chflags nohidden /Volumes
-        ;;
-esac
+# When performing a search, search the current folder by default
+run defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
-chapter "Adjusting Dock, Dashboard, and hot corners"
+# Avoid creating .DS_Store files on network volumes
+run defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
-step "Change the icon size (in px) of Dock items? [48/n]: " ""
-read tilesize
-case $tilesize in
-    [nN] )
-        echo ""
-        ;;
-    * )
-        echo ""
-        run defaults write com.apple.dock tilesize -int ${tilesize:-48}
-        ;;
-esac
+# Use column view in all Finder windows by default
+# Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv` `Nlsv`
+run defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 
-step "Automatically hide and show the Dock? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.dock autohide -bool true
-        ;;
-esac
+# Disable the warning before emptying the Trash
+run defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
-step "Make Dock icons of hidden applications translucent? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.dock showhidden -bool true
-        ;;
-esac
+# Empty Trash securely by default
+run defaults write com.apple.finder EmptyTrashSecurely -bool true
+
+# Enable highlight hover effect for the grid view of a stack (Dock)
+run defaults write com.apple.dock mouse-over-hilite-stack -bool true
+
+# Enable spring loading for all Dock items
+run defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# Disable Dashboard
+run defaults write com.apple.dashboard mcx-disabled -bool true
+
+# Don’t show Dashboard as a Space
+run defaults write com.apple.dock dashboard-in-overlay -bool true
+
+# Don’t automatically rearrange Spaces based on most recent use
+run defaults write com.apple.dock mru-spaces -bool false
 
 chapter "Adjusting Mac App Store settings"
 
-step "Enable the automatic update check? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-        ;;
-esac
+# Enable the automatic update check?
+run defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 
-step "Check for software updates daily, not just once per week? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-        ;;
-esac
+# Check for software updates daily, not just once per week?
+run defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
-step "Download newly available updates in background? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
-        ;;
-esac
+# Download newly available updates in background?
+run defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 
-step "Install System data files & security updates? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
-        ;;
-esac
+# Install System data files & security updates?
+run defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
 
-step "Turn on app auto-update? [Y/n]: " ""
-case $(read choice; echo $choice) in
-    [nN] )
-        echo ""
-        ;;
-    [yY] | * )
-        echo ""
-        run defaults write com.apple.commerce AutoUpdate -bool true
-        ;;
-esac
+# Turn on app auto-update?
+run defaults write com.apple.commerce AutoUpdate -bool true
 
 chapter "Installing…"
 
@@ -413,11 +202,19 @@ else
     run brew update
 fi
 
+step "Homebrew taps\n"
+
+for repo in $(<$cwd/.stack/tap); do
+    if ! brew tap -1 | grep -q "^${repo}\$"; then
+run brew tap $repo
+    fi
+done
+
 step "CLI apps\n"
 
 for app in $(<$cwd/.stack/cli); do
     if ! brew list -1 | grep -q "^${app}\$"; then
-        run brew install $app
+run brew install $app
     fi
 done
 
@@ -425,33 +222,37 @@ step "Desktop apps\n"
 
 for app in $(<$cwd/.stack/desktop); do
     if ! brew cask list -1 | grep -q "^${app}\$"; then
-        run brew cask install $app
+run brew cask install $app
     fi
 done
 
+step "Apple Store apps\n"
+
+for app in $(<$cwd/.stack/appstore); do
+    if ! mas list -1 | grep -q "^${app}\$"; then
+run mas $app
+    fi
+done
 
 step "Fonts\n"
 
-run brew tap caskroom/fonts
-
 for font in $(<$cwd/.stack/fonts); do
     if ! brew cask list -1 | grep -q "^${font}\$"; then
-        run brew cask install $font
+run brew cask install $font
     fi
 done
-
-# step "(Web) Development setup"
-# run brew tap homebrew/php
-# run brew install nginx mysql php71 composer
-# run sudo cp -vR $cwd/etc/nginx /etc
 
 step "Atom packages/themes\n"
 
 for package in $(<$cwd/.stack/atom); do
     if [ ! -d ~/.atom/packages/$package ]; then
-        run apm install $package
+run apm install $package
     fi
 done
+
+step "Google Chrome Preferences\n"
+run defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
+run defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
 
 step "Prezto\n"
 
@@ -484,15 +285,38 @@ run ln -sfv $cwd/.atom/snippets.cson ~/.atom
 run ln -sfv $cwd/.atom/toolbar.cson ~/.atom
 run ln -sfv $cwd/.atom/styles.less ~/.atom
 
+step "Set Dock Items\n"
+for item in $(<$cwd/.stack/dock); do
+    if ! dockutil list -1 | grep -q "^${item}\$"; then
+run dockutil $item
+    fi
+done
+
 step "iTerm2 preferences\n"
 run ln -sfv $cwd/.iTerm2 ~
 run defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 run defaults write com.googlecode.iterm2 PrefsCustomFolder ~/.iTerm2
 
-step "VLC preferences\n"
-run ln -sfv $cwd/org.videolan.vlc ~/Library/Preferences
+step "Set Dark Mode\n"
+osascript <<EOF
+tell application "System Events"
+  tell appearance preferences
+    set dark mode to true
+  end tell
+end tell
+EOF
 
-step "Set default wallpaper\n"
+step "Set Profile Pic\n"
+# Delete any Photo currently used.
+run dscl . delete /Users/hugh jpegphoto
+run sleep 1
+# Delete File path
+run dscl . delete /Users/hugh Picture
+run sleep 1
+# Set New Photo
+run sudo dscl . create /Users/hugh Picture "$cwd/etc/phil.jpg"
+
+step "Set wallpaper folder\n"
 run sqlite3 "~/Library/Application\ Support/Dock/desktoppicture.db" "\"\
 DELETE FROM data; \
 DELETE FROM displays; \
@@ -501,7 +325,7 @@ DELETE FROM preferences; \
 DELETE FROM prefs; \
 DELETE FROM spaces; \
 INSERT INTO pictures (space_id, display_id) VALUES (null, null); \
-INSERT INTO data (value) VALUES ('${cwd}/wallpaper.jpg'); \
+INSERT INTO data (value) VALUES ('~/Library/Mobile Documents/com~apple~CloudDocs/Wallpaper'); \
 INSERT INTO preferences (key, data_id, picture_id) VALUES (1, 1, 1); \
 \""
 run killall Dock
