@@ -1,0 +1,14 @@
+numpy
+scipy
+matplotlib
+pandas
+sympy
+nose
+unittest2
+seaborn
+scikit-learn
+"ipython[all]"
+bokeh
+Flask
+sqlalchemy
+mysql-python
