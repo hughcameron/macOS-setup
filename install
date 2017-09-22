@@ -281,6 +281,7 @@ step "Atom preferences\n"
 run mkdir -pv ~/.atom
 run ln -sfv $cwd/.atom/config.cson ~/.atom
 run ln -sfv $cwd/.atom/keymap.cson ~/.atom
+run ln -sfv $cwd/.atom/packages.cson ~/.atom
 run ln -sfv $cwd/.atom/snippets.cson ~/.atom
 run ln -sfv $cwd/.atom/toolbar.cson ~/.atom
 run ln -sfv $cwd/.atom/styles.less ~/.atom
