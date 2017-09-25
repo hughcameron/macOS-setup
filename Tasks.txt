@@ -1,0 +1,8 @@
+[X] Remove keyboard refresh rate
+[ ] Change wallpaper method to AppleScript
+[ ] Dockutils parsing spaces - amend to parse lines only
+[ ] View Bluetooth Menu in Toolbar
+[X] Improve Terminal view readability
+[ ] Create Projects Folder, Assign Icon and Add to Sidebar
+[ ] Do we need to use pydata.sh?
+[ ] Symlink atom settings to current settings - /Users/hugh/.atom/

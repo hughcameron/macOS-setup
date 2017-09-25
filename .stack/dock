@@ -8,10 +8,10 @@
 --remove Reminders
 --remove Maps
 --remove Photos
---remove Facetime
+--remove FaceTime
 --remove iBooks
---remove App Store
---remove System Preferences
+--remove 'App Store'
+--remove 'System Preferences'
 --add /Applications/Slack.app
 --add /Applications/Atom.app
 --add '/Applications/Google Chrome.app'

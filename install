@@ -112,7 +112,7 @@ run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 # Disable press-and-hold for keys in favor of key repeat?
 run defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-# Set a blazingly fast keyboard repeat rate?
+# Set a blazingly fast keyboard repeat w?
 run defaults write NSGlobalDomain KeyRepeat -int 1
 run defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
@@ -172,9 +172,6 @@ run defaults write com.apple.dashboard mcx-disabled -bool true
 # Don’t show Dashboard as a Space
 run defaults write com.apple.dock dashboard-in-overlay -bool true
 
-# Don’t automatically rearrange Spaces based on most recent use
-run defaults write com.apple.dock mru-spaces -bool false
-
 chapter "Adjusting Mac App Store settings"
 
 # Enable the automatic update check?
@@ -230,7 +227,7 @@ step "Apple Store apps\n"
 
 for app in $(<$cwd/.stack/appstore); do
     if ! mas list -1 | grep -q "^${app}\$"; then
-run mas $app
+run mas install $app
     fi
 done
 
