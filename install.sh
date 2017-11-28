@@ -109,13 +109,6 @@ run defaults write com.apple.helpviewer DevMode -bool true
 # Enable full keyboard access for all controls? e.g. enable Tab in modal dialogs
 run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-# Disable press-and-hold for keys in favor of key repeat?
-run defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-# Set a blazingly fast keyboard repeat w?
-run defaults write NSGlobalDomain KeyRepeat -int 1
-run defaults write NSGlobalDomain InitialKeyRepeat -int 10
-
 chapter "Adjusting Finder settings"
 
 # Keep folders on top when sorting by name?
@@ -326,6 +319,20 @@ INSERT INTO pictures (space_id, display_id) VALUES (null, null); \
 INSERT INTO data (value) VALUES ('~/Library/Mobile Documents/com~apple~CloudDocs/Wallpaper'); \
 INSERT INTO preferences (key, data_id, picture_id) VALUES (1, 1, 1); \
 \""
+
+osascript <<EOF
+tell application "System Preferences"
+    activate
+    set the current pane to pane id "com.apple.preference.desktopscreeneffect"
+end tell
+
+delay 2
+
+tell application "System Events" to tell process "System Preferences"
+    click checkbox "Change picture:" of tab group 1 of window "Desktop & Screen Saver"
+end tell
+EOF
+
 run killall Dock
 
 ###############################################################################

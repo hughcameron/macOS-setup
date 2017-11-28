@@ -44,10 +44,12 @@
   "atom-package-deps":
     ignored: [
       "linter-htmlhint"
+      "linter-tidy"
     ]
   "autocomplete-python":
     useKite: false
   core:
+    closeDeletedFileTabs: true
     customFileTypes:
       "source.ini": [
         ".buckconfig"
@@ -96,6 +98,15 @@
     createOnChange: true
     forceOverwrite: true
   "platformio-ide-terminal":
+    ansiColors:
+      normal:
+        black: "#212121"
+        blue: "#5497ef"
+        cyan: "#80ffe9"
+        green: "#73ab84"
+        magenta: "#af2cbe"
+        red: "#f45c69"
+        yellow: "#ffee92"
     core:
       mapTerminalsTo: "Folder"
     style:

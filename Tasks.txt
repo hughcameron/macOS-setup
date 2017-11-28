@@ -6,3 +6,4 @@
 [ ] Create Projects Folder, Assign Icon and Add to Sidebar
 [ ] Do we need to use pydata.sh?
 [ ] Symlink atom settings to current settings - /Users/hugh/.atom/
+[ ] Pimp up Spotlight and Quicklook
