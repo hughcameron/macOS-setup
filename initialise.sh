@@ -1,1 +1,1 @@
-echo cheque won too
+sh ~/Projects/macOS/install.sh

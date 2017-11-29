@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Thanks to https://mths.be/macos
 
+rm ~/Projects/initialise.sh
+
 count=1
 
 # Script's color palette
