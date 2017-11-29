@@ -10,3 +10,6 @@ R
 wget
 youtube-dl
 z
+r
+ffmpeg
+sqlite
