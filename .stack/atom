@@ -3,16 +3,19 @@ auto-update-packages
 autocomplete-python
 change-case
 chester-atom-syntax
+color-picker
 docker
 epoch-converter
 file-icons
 haskell-grammar
 highlight-selected
 Hydrogen
+json-converter
 kite
 language-babel
 language-docker
 language-graphql
+language-haskell
 language-ini
 language-lua
 language-ocaml
@@ -29,6 +32,7 @@ nuclide-format-js
 package-sync
 platformio-ide-terminal
 plist-converter
+pretty-json
 qolor
 quick-query
 quick-query-sqlite
@@ -37,6 +41,7 @@ set-syntax
 sort-lines
 split-diff
 tab-control
+tablr
 text-pastry
 tool-bar
 url-encode
