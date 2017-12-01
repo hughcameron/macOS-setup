@@ -1,17 +1,17 @@
-[ ] Resolve python install errors
 [ ] Change wallpaper method to AppleScript
 [ ] Create new repo call 'Quick-macOS'
-[ ] Learn how to leverage OS Keychain
-[ ] Remove .iTerm2 folder
-[ ] View Bluetooth Menu in Toolbar
 [ ] Create Projects Folder, Assign Icon and Add to Sidebar
-[ ] Symlink atom settings to current settings - /Users/hugh/.atom/
-[ ] Pimp up Spotlight and Quicklook (https://github.com/juanbrujo/Talus)
-[ ] Stop creating DS Store Files
 [ ] Don't use diskutil
-[ ] Add command line developer tools to initilise
-[ ] Why does keyboard beep on move line down (Ctrl + Cmd + Down)?
-[X] Remove keyboard refresh rate
-[X] Improve Terminal view readability
+[ ] Learn how to leverage OS Keychain
+[ ] Pimp up Spotlight and Quicklook (https://github.com/juanbrujo/Talus)
+[ ] Remove .iTerm2 folder
+[ ] Resolve python install errors
 [ ] Set Slack, Things etc. to Open at Login
 [ ] Sort Desktop by Date Modified
+[ ] Stop creating DS Store Files
+[?] Symlink atom settings to current settings - /Users/hugh/.atom/
+[ ] View Bluetooth Menu in Toolbar
+[ ] Why does keyboard beep on move line down (Ctrl + Cmd + Down)?
+[X] Add command line developer tools to initilise
+[X] Improve Terminal view readability
+[X] Remove keyboard refresh rate
