@@ -1,4 +1,4 @@
-dockutil
+ffmpeg
 git
 hunspell
 mas
@@ -6,10 +6,8 @@ node
 proselint
 python
 python3
-R
+r
+sqlite
 wget
 youtube-dl
 z
-r
-ffmpeg
-sqlite
